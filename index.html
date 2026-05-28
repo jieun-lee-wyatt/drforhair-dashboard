@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr.FORHAIR 운영 품질 통합 대시보드 2026</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#0f1117;--bg1:#171b26;--bg2:#1d2133;--bg3:#242840;--bg4:#2c304c;
+  --bd0:#2a2e44;--bd1:#363c58;--bd2:#444c6a;
+  --t0:#eef0f8;--t1:#9ba3c0;--t2:#5c6480;
+  --red:#e5495a;--rbg:#261318;--rbd:#5a202a;--rt:#ffb8c0;
+  --amb:#f0a020;--abg:#251a08;--abd:#6a4010;--at:#ffe0a0;
+  --grn:#28c490;--gbg:#082418;--gbd:#186040;--gt:#a0fcd8;
+  --blu:#4a9ef8;--bbg:#081835;--bbd:#1a4880;--bt:#b8d8ff;
+  --pur:#9a80fa;--pubg:#180f3a;--pubd:#4030a0;--put:#d8c8ff;
+  --cr:10px;
+}
+[data-lt]{
+  --bg0:#f0f2f8;--bg1:#fff;--bg2:#f4f6fc;--bg3:#eaecf5;--bg4:#e0e3f0;
+  --bd0:#d4d8ea;--bd1:#bec4da;--bd2:#a8b0d0;
+  --t0:#1a1e35;--t1:#4a5278;--t2:#8890b0;
+  --red:#c8001e;--rbg:#feeaec;--rbd:#f0b0b8;--rt:#7a0010;
+  --amb:#b06000;--abg:#fff3dd;--abd:#f0c870;--at:#7a4000;
+  --grn:#0d7050;--gbg:#e0f8f0;--gbd:#70d8b0;--gt:#084838;
+  --blu:#1858a8;--bbg:#e8f0fc;--bbd:#90b8f0;--bt:#0c3870;
+  --pur:#5030b8;--pubg:#f0eaff;--pubd:#c0a8f8;--put:#2a1880;
+}
+body{background:var(--bg0);color:var(--t0);font-family:system-ui,-apple-system,sans-serif;font-size:13px;line-height:1.5;transition:background .18s,color .18s}
+.nav{background:var(--bg1);border-bottom:1px solid var(--bd0);display:flex;align-items:stretch;flex-wrap:wrap;padding:0 14px}
+.brand{display:flex;align-items:center;padding:9px 14px 9px 0;border-right:1px solid var(--bd0);margin-right:8px}
+.brand-n{font-size:14px;font-weight:500}.brand-s{font-size:10px;color:var(--t2);margin-top:1px}
+.ntab{padding:0 11px;height:44px;display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:all .14s;white-space:nowrap}
+.ntab:hover{color:var(--t0)}.ntab.on{color:var(--t0);border-bottom-color:var(--red);font-weight:500}
+.ntab i{font-size:14px}
+.nav-r{margin-left:auto;display:flex;align-items:center;gap:7px}
+.bsm{background:var(--bg3);border:1px solid var(--bd0);color:var(--t1);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;display:flex;align-items:center;gap:4px}
+.bsm:hover{background:var(--bg4);color:var(--t0)}
+.conf{background:var(--rbg);border:1px solid var(--rbd);color:var(--rt);font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+.pnl{display:none;padding:16px 14px}.pnl.on{display:block}
+.mstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin-bottom:16px}
+.mc{background:var(--bg1);border:1px solid var(--bd0);border-radius:var(--cr);padding:11px 12px;position:relative;overflow:hidden}
+.mc-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.mc-val{font-size:20px;font-weight:500;line-height:1}
+.mc-sub{font-size:10px;color:var(--t2);margin-top:3px}
+.mc-bar{position:absolute;bottom:0;left:0;height:3px}
+.st{font-size:10px;font-weight:500;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.st::after{content:'';flex:1;height:1px;background:var(--bd0)}
+.tw{background:var(--bg1);border:1px solid var(--bd0);border-radius:var(--cr);overflow:hidden;margin-bottom:14px}
+.tw table{width:100%;border-collapse:collapse;font-size:12px}
+.tw th{padding:7px 9px;text-align:left;font-size:10px;color:var(--t2);font-weight:500;border-bottom:1px solid var(--bd0);background:var(--bg2);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.tw td{padding:7px 9px;border-bottom:1px solid var(--bd0);color:var(--t1);vertical-align:middle}
+.tw tr:last-child td{border-bottom:none}
+.tw tr:hover td{background:var(--bg2)}
+.sn{color:var(--t0)!important;font-weight:500;cursor:pointer}.sn:hover{color:var(--red)!important}
+.p{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500}
+.p-g{background:var(--gbg);color:var(--gt);border:1px solid var(--gbd)}
+.p-a{background:var(--abg);color:var(--at);border:1px solid var(--abd)}
+.p-r{background:var(--rbg);color:var(--rt);border:1px solid var(--rbd)}
+.p-b{background:var(--bbg);color:var(--bt);border:1px solid var(--bbd)}
+.p-n{background:var(--bg3);color:var(--t2);border:1px solid var(--bd0)}
+.hd{width:22px;height:22px;border-radius:50%;display:inline-block}
+.hd-g{background:var(--grn);opacity:.75}.hd-a{background:var(--amb);opacity:.85}
+.hd-r{background:var(--red);opacity:.85}.hd-n{background:var(--bg3);border:1px solid var(--bd1)}
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;justify-content:flex-end}
+.drw{background:var(--bg1);border-left:1px solid var(--bd0);width:min(440px,96vw);height:100%;overflow-y:auto;display:flex;flex-direction:column}
+.drw-hdr{padding:14px 16px;border-bottom:1px solid var(--bd0);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-shrink:0;background:var(--bg1);position:sticky;top:0;z-index:1}
+.drw-body{padding:16px;flex:1}
+.xbtn{background:var(--bg3);border:1px solid var(--bd0);color:var(--t1);width:26px;height:26px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.xbtn:hover{background:var(--rbg);color:var(--rt)}
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--bg1);border:1px solid var(--bd0);border-radius:14px;width:100%;max-width:680px;max-height:88vh;overflow-y:auto}
+.modal-hdr{padding:14px 16px;border-bottom:1px solid var(--bd0);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:sticky;top:0;background:var(--bg1);z-index:1;border-radius:14px 14px 0 0}
+.modal-body{padding:16px}
+.mtabs{display:flex;border-bottom:1px solid var(--bd0);margin-bottom:12px}
+.mtab{padding:6px 12px;font-size:12px;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent}
+.mtab:hover{color:var(--t0)}.mtab.on{color:var(--t0);border-bottom-color:var(--red);font-weight:500}
+.cpop{position:fixed;top:55px;left:50%;transform:translateX(-50%);background:var(--bg1);border:1px solid var(--bd0);border-radius:12px;width:min(430px,94vw);padding:14px;z-index:400;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.act-inp{width:100%;background:var(--bg3);border:1px solid var(--bd1);border-radius:4px;color:var(--t0);padding:4px 7px;font-size:11px;font-family:inherit;outline:none}
+.act-inp:focus{border-color:var(--blu)}
+.act-sel{background:var(--bg3);border:1px solid var(--bd1);border-radius:4px;color:var(--t0);padding:3px 5px;font-size:11px;font-family:inherit;outline:none;cursor:pointer}
+.edu-wrap{overflow-x:auto;background:var(--bg1);border:1px solid var(--bd0);border-radius:var(--cr)}
+.edu-tbl{border-collapse:collapse;min-width:980px;width:100%}
+.edu-tbl th{padding:7px 4px;text-align:center;font-size:10px;color:var(--t2);font-weight:500;border-bottom:2px solid var(--bd0);border-right:1px solid var(--bd0);background:var(--bg2);white-space:nowrap;text-transform:uppercase;letter-spacing:.04em}
+.edu-tbl th:first-child{text-align:left;padding-left:10px;min-width:95px;border-right:2px solid var(--bd0)}
+.edu-tbl th:last-child{border-right:none;min-width:60px}
+.edu-tbl th.mo{min-width:62px}
+.edu-tbl td{padding:3px 3px;border-bottom:1px solid var(--bd0);border-right:1px solid var(--bd0);text-align:center;vertical-align:middle}
+.edu-tbl td:first-child{text-align:left;padding-left:10px;border-right:2px solid var(--bd0);white-space:nowrap}
+.edu-tbl td:last-child{border-right:none;text-align:center}
+.edu-tbl tr:last-child td{border-bottom:none}
+.edu-tbl tr:hover td{background:var(--bg2)}
+.edu-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0}
+.edu-num{width:50px;height:26px;background:var(--bg3);border:1px solid var(--bd1);border-radius:5px;color:var(--t0);font-size:12px;font-weight:500;text-align:center;padding:0 2px;-webkit-appearance:auto;-moz-appearance:number-input;appearance:auto;outline:none;display:block}
+.edu-num:focus{border-color:var(--grn);background:var(--bg2)}
+.edu-num::-webkit-inner-spin-button,.edu-num::-webkit-outer-spin-button{-webkit-appearance:auto;opacity:1}
+.ems{width:6px;height:6px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd1)}
+.ems.y{background:var(--grn);border-color:var(--grn)}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}
+.card{background:var(--bg1);border:1px solid var(--bd0);border-radius:var(--cr);padding:12px}
+.card-t{font-size:12px;font-weight:500;color:var(--t0);margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.mbar{margin-bottom:6px}
+.mbar-h{display:flex;justify-content:space-between;margin-bottom:3px}
+.mbar-lbl{font-size:11px;color:var(--t1)}.mbar-val{font-size:11px;font-weight:500}
+.mbar-track{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.mbar-fill{height:100%;border-radius:3px}
+.kwbar{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.kwbar-name{font-size:11px;color:var(--t1);width:60px;flex-shrink:0}
+.kwbar-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.kwbar-fill{height:100%;border-radius:3px}
+.kwbar-val{font-size:11px;color:var(--t2);width:30px;text-align:right}
+.cs-row{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.cs-name{font-size:12px;color:var(--t1);width:110px;flex-shrink:0}
+.cs-track{flex:1;height:7px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.cs-fill{height:100%;border-radius:3px}
+.cs-cnt{font-size:11px;font-weight:500;width:26px;text-align:right}
+.ibox{background:var(--bg2);border-left:3px solid var(--blu);border-radius:0 7px 7px 0;padding:9px 11px;margin-bottom:7px;font-size:12px;color:var(--t1);line-height:1.6}
+.ibox.warn{border-left-color:var(--amb)}.ibox.danger{border-left-color:var(--red)}.ibox.ok{border-left-color:var(--grn)}
+.ibox strong{color:var(--t0)}
+.achip{display:flex;align-items:center;gap:5px;background:var(--abg);border:1px solid var(--abd);border-radius:6px;padding:4px 9px;font-size:11px;color:var(--at)}
+.qsc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block;margin-right:5px}
+.rk{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.rk1{background:var(--abg);color:var(--amb);border:1px solid var(--abd)}.rk2{background:var(--bg3);color:var(--t1);border:1px solid var(--bd1)}.rk-n{background:var(--bg3);color:var(--t2);border:1px solid var(--bd0)}
+.ch-wrap{position:relative;margin:8px 0}
+.blank{background:var(--bg2);border:1px dashed var(--bd1);border-radius:8px;padding:18px;text-align:center;color:var(--t2);font-size:12px}
+.blank i{font-size:22px;display:block;margin-bottom:5px;opacity:.5}
+.mt10{margin-top:10px}.mt14{margin-top:14px}.mt18{margin-top:18px}
+.sep{height:1px;background:var(--bd0);margin:11px 0}
+.txt-r{color:var(--red)}.txt-a{color:var(--amb)}.txt-g{color:var(--grn)}.txt-b{color:var(--blu)}.txt-p{color:var(--pur)}
+.bold{font-weight:500}.ox{overflow-x:auto}
+.hidden{display:none!important}
+.storage-notice{background:var(--bbg);border:1px solid var(--bbd);border-radius:8px;padding:9px 12px;font-size:11px;color:var(--bt);margin-bottom:12px;line-height:1.6}
+.gact-section{background:var(--bg1);border:1px solid var(--bd0);border-radius:var(--cr);overflow:hidden;margin-top:4px}
+.gact-hdr{padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--bd0);display:flex;align-items:center;justify-content:space-between}
+.gact-body{padding:14px}
+.atbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px}
+.atbl th{padding:6px 8px;text-align:left;color:var(--t2);font-weight:500;border-bottom:1px solid var(--bd0);font-size:10px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.atbl td{padding:6px 8px;border-bottom:1px solid var(--bd0);color:var(--t1);vertical-align:middle}
+.atbl tr:last-child td{border-bottom:none}
+.sum-strip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sum-chip{background:var(--bg1);border:1px solid var(--bd0);border-radius:8px;padding:7px 12px;display:flex;align-items:center;gap:9px}
+.sum-val{font-size:16px;font-weight:500;line-height:1}
+.sum-lbl{font-size:10px;color:var(--t2)}
+</style>
+</head>
+<body>
+<div id="app">
+<nav class="nav">
+  <div class="brand"><div><div class="brand-n">Dr.FORHAIR</div><div class="brand-s">운영 품질 통합 대시보드 2026</div></div></div>
+  <div class="ntab on" onclick="goTab('home',this)"><i class="ti ti-layout-dashboard"></i>홈</div>
+  <div class="ntab" onclick="goTab('ms',this)"><i class="ti ti-eye-search"></i>미스터리 쇼핑</div>
+  <div class="ntab" onclick="goTab('direct',this)"><i class="ti ti-clipboard-check"></i>직접 평가</div>
+  <div class="ntab" onclick="goTab('feedback',this)"><i class="ti ti-message-2"></i>고객 피드백</div>
+  <div class="ntab" onclick="goTab('sales',this)"><i class="ti ti-chart-line"></i>매출 성과</div>
+  <div class="ntab" onclick="goTab('edu',this)"><i class="ti ti-school"></i>교육 시청</div>
+  <div class="nav-r">
+    <span class="conf">CONFIDENTIAL</span>
+    <button class="bsm" onclick="toggleTheme()" id="tbtn"><i class="ti ti-sun"></i><span id="ttxt">라이트</span></button>
+  </div>
+</nav>
+
+<div class="pnl on" id="pnl-home">
+  <div class="mstrip">
+    <div class="mc"><div class="mc-lbl">전체 MS 점수</div><div class="mc-val txt-a">68.4</div><div class="mc-sub">10개 매장 평균</div><div class="mc-bar" style="width:68.4%;background:var(--amb)"></div></div>
+    <div class="mc"><div class="mc-lbl">QSC 점수</div><div class="mc-val txt-b">69.0</div><div class="mc-sub">3개 매장 평균</div><div class="mc-bar" style="width:69%;background:var(--blu)"></div></div>
+    <div class="mc"><div class="mc-lbl">평균 NPS</div><div class="mc-val txt-g">18.2</div><div class="mc-sub">잠실점 (1개 집계)</div><div class="mc-bar" style="width:50%;background:var(--grn)"></div></div>
+    <div class="mc"><div class="mc-lbl">관리 필요 매장</div><div class="mc-val txt-a" id="care-cnt">—</div><div class="mc-sub">MS 또는 QSC 65↓</div><div class="mc-bar" id="care-bar" style="width:0;background:var(--amb)"></div></div>
+    <div class="mc"><div class="mc-lbl">MS 최고 매장</div><div class="mc-val txt-g">91.4</div><div class="mc-sub">제주점 #1</div><div class="mc-bar" style="width:91.4%;background:var(--grn)"></div></div>
+  </div>
+  <div class="st">관리 필요 매장 <span style="font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--t2)">MS 65점 미만 또는 QSC 65점 미만</span></div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px" id="home-chips"></div>
+  <div class="st">영역별 현황 요약</div>
+  <div class="g2" style="margin-bottom:16px">
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="card-t"><i class="ti ti-eye-search" style="color:var(--red)"></i>미스터리 쇼핑</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">전체 평균</span><span class="bold txt-a">68.4점</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">최고 매장</span><span class="bold txt-g">제주점 91.4</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">강점 항목</span><span style="font-size:11px" class="txt-g">진단·관리설계 81.3</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">최약 항목</span><span style="font-size:11px" class="txt-r">사후관리 57.5</span></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blu)">
+      <div class="card-t"><i class="ti ti-clipboard-check" style="color:var(--blu)"></i>직접 평가 (QSC)</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">잠실점</span><span class="bold txt-a">74.0점</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">성신여대점</span><span class="bold txt-a">72.0점</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">다산점</span><span class="bold txt-r">61.0점</span></div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--grn)">
+      <div class="card-t"><i class="ti ti-message-2" style="color:var(--grn)"></i>고객 피드백</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">잠실점 NPS</span><span class="bold txt-b">18.2</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:11px;color:var(--t2)">전체 리뷰 (잠실)</span><span class="bold">403건</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">나머지 매장</span><span style="font-size:11px;color:var(--t2)">업로드 대기</span></div>
+    </div>
+  </div>
+  <div class="st">운영 현황 히트맵</div>
+  <div class="ox"><table id="hmap-tbl" style="border-collapse:collapse;width:100%;font-size:12px;min-width:480px"></table></div>
+  <div style="display:flex;gap:12px;align-items:center;font-size:11px;color:var(--t2);margin-top:7px;margin-bottom:18px">
+    <span style="display:flex;align-items:center;gap:5px"><span class="hd hd-g"></span>양호 75+</span>
+    <span style="display:flex;align-items:center;gap:5px"><span class="hd hd-a"></span>주의 65~74</span>
+    <span style="display:flex;align-items:center;gap:5px"><span class="hd hd-r"></span>위험 ~64</span>
+    <span style="display:flex;align-items:center;gap:5px"><span class="hd hd-n"></span>미입력</span>
+  </div>
+  <div class="st">전체 공통 개선 포인트</div>
+  <div class="ibox danger" style="margin-bottom:6px"><strong>사후관리 프로세스 부재 (전 매장):</strong> 배웅 인사·홈케어 안내·재방문 유도 문자가 10개 매장 전반에서 미이행.</div>
+  <div class="ibox danger" style="margin-bottom:6px"><strong>가격 안내 불일관성 (전 매장):</strong> 동일 프로그램임에도 전화·예약·현장 금액이 매장별·채널별 모두 상이.</div>
+  <div class="ibox warn" style="margin-bottom:6px"><strong>진단 기기 소독 미수행 (QSC 3개 매장):</strong> 잠실·성신여대·다산점 모두 시술 전 소독 미수행.</div>
+  <div class="ibox warn" style="margin-bottom:6px"><strong>옥외가격표시 미부착 (QSC 3개 매장):</strong> 법적 의무 사항. 즉각 조치 필요.</div>
+  <div class="ibox ok" style="margin-bottom:18px"><strong>강점 — 진단·관리설계 역량:</strong> MS 기준 81.3점으로 전 항목 최고.</div>
+  <div class="st">전체 본사 액션</div>
+  <div class="storage-notice">💾 <strong>저장 안내:</strong> 현재는 브라우저 세션 내 저장입니다. Notion API 연동 후 영구 저장이 가능합니다. <strong>[내보내기]</strong>로 임시 복사 가능.</div>
+  <div class="gact-section">
+    <div class="gact-hdr"><span style="font-size:12px;font-weight:500;color:var(--t0)">본사 공통 액션 현황</span><button class="bsm" onclick="exportActions()"><i class="ti ti-download"></i>내보내기</button></div>
+    <div class="gact-body">
+      <table class="atbl"><thead><tr><th style="width:42%">액션 내용</th><th style="width:14%">담당자</th><th style="width:20%">대상 매장</th><th style="width:10%;text-align:center">완료</th><th style="width:4%"></th></tr></thead><tbody id="gact-body"><tr><td colspan="5" style="text-align:center;color:var(--t2);font-size:11px;padding:12px">등록된 액션이 없습니다</td></tr></tbody></table>
+      <div style="background:var(--bg2);border:1px solid var(--bd0);border-radius:8px;padding:11px;margin-top:4px">
+        <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:7px;align-items:end">
+          <div><div style="font-size:10px;color:var(--t2);margin-bottom:3px">액션 내용</div><input class="act-inp" id="ga-content" placeholder="예: 전 매장 사후관리 멘트 표준화 교육 실시"></div>
+          <div><div style="font-size:10px;color:var(--t2);margin-bottom:3px">담당자</div><select class="act-sel" id="ga-owner"><option>슈퍼바이저</option><option>교육담당자</option></select></div>
+          <div><div style="font-size:10px;color:var(--t2);margin-bottom:3px">대상 매장</div><input class="act-inp" id="ga-target" placeholder="전 매장" style="width:100px"></div>
+          <button onclick="addGAct()" style="background:var(--bbg);border:1px solid var(--bbd);color:var(--bt);padding:6px 12px;border-radius:5px;cursor:pointer;font-size:11px;height:30px"><i class="ti ti-plus"></i> 추가</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pnl" id="pnl-ms">
+  <div class="mstrip">
+    <div class="mc"><div class="mc-lbl">전체 평균</div><div class="mc-val txt-a">68.4</div><div class="mc-sub">10개 매장</div><div class="mc-bar" style="width:68.4%;background:var(--amb)"></div></div>
+    <div class="mc"><div class="mc-lbl">두피관리샵</div><div class="mc-val txt-g">69.1</div><div class="mc-sub">8개 매장</div><div class="mc-bar" style="width:69.1%;background:var(--grn)"></div></div>
+    <div class="mc"><div class="mc-lbl">샵인샵</div><div class="mc-val txt-b">65.6</div><div class="mc-sub">2개 매장</div><div class="mc-bar" style="width:65.6%;background:var(--blu)"></div></div>
+    <div class="mc"><div class="mc-lbl">최고</div><div class="mc-val txt-g">91.4</div><div class="mc-sub">제주점</div><div class="mc-bar" style="width:91.4%;background:var(--grn)"></div></div>
+    <div class="mc"><div class="mc-lbl">최저</div><div class="mc-val txt-r">42.5</div><div class="mc-sub">광명점</div><div class="mc-bar" style="width:42.5%;background:var(--red)"></div></div>
+  </div>
+  <div class="st">항목별 종합 점수 <span style="font-size:9px;font-weight:400;text-transform:none;letter-spacing:0">— 막대 클릭 시 매장별 순위 팝업</span></div>
+  <div style="display:flex;gap:8px;margin-bottom:6px;font-size:11px;color:var(--t2)">
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#28c490;display:inline-block"></span>75+ 우수</span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#f0a020;display:inline-block"></span>65~74 보통</span>
+    <span style="display:flex;align-items:center;gap:3px"><span style="width:9px;height:9px;border-radius:2px;background:#e5495a;display:inline-block"></span>65미만 개선</span>
+  </div>
+  <div class="ch-wrap" style="height:185px"><canvas id="msBar" style="cursor:pointer"></canvas></div>
+  <div class="st mt18">매장별 순위</div>
+  <div class="tw"><table id="ms-tbl"></table></div>
+</div>
+
+<div class="pnl" id="pnl-direct">
+  <div class="mstrip">
+    <div class="mc"><div class="mc-lbl">잠실점</div><div class="mc-val txt-a">74.0</div><div class="mc-sub">26.05 1차</div><div class="mc-bar" style="width:74%;background:var(--amb)"></div></div>
+    <div class="mc"><div class="mc-lbl">성신여대점</div><div class="mc-val txt-a">72.0</div><div class="mc-sub">26.05 1차</div><div class="mc-bar" style="width:72%;background:var(--amb)"></div></div>
+    <div class="mc"><div class="mc-lbl">다산점</div><div class="mc-val txt-r">61.0</div><div class="mc-sub">26.05 1차</div><div class="mc-bar" style="width:61%;background:var(--red)"></div></div>
+    <div class="mc"><div class="mc-lbl">3개 평균</div><div class="mc-val txt-b">69.0</div><div class="mc-sub">C·Q·E·S 종합</div><div class="mc-bar" style="width:69%;background:var(--blu)"></div></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <div class="st" style="margin-bottom:0;flex:1">매장별 QSC 결과 (클릭 시 상세)</div>
+    <label class="bsm" style="cursor:pointer"><i class="ti ti-upload"></i>파일 업로드<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="alert('QSC 파일 업로드 완료')"></label>
+  </div>
+  <div class="tw ox"><table id="qsc-tbl"><thead><tr><th>매장명</th><th>평가일</th><th>청결 C</th><th>교육품질 Q</th><th>교육이행 E</th><th>서비스 S</th><th>종합</th><th style="min-width:200px">영역별 미이행 TOP 1</th></tr></thead><tbody id="qsc-tbody"></tbody></table></div>
+  <div class="ch-wrap" style="height:170px"><canvas id="qscBar"></canvas></div>
+</div>
+
+<div class="pnl" id="pnl-feedback">
+  <div style="display:flex;border-bottom:1px solid var(--bd0);margin-bottom:14px">
+    <div class="mtab on" id="fbt-rv" onclick="fbTab('rv',this)">플레이스 리뷰</div>
+    <div class="mtab" id="fbt-cs" onclick="fbTab('cs',this)">본사 CS 인입</div>
+  </div>
+  <div id="fbp-rv">
+    <div style="background:var(--bbg);border:1px solid var(--bbd);border-radius:8px;padding:9px 12px;font-size:11px;color:var(--bt);margin-bottom:10px;line-height:1.6">ℹ️ 리뷰 분석 엑셀(.xlsx)을 업로드하면 해당 지점 데이터가 자동 반영됩니다. 현재 <strong>잠실점</strong>은 실제 파일 파싱 데이터입니다.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="st" style="margin-bottom:0;flex:1">지점별 리뷰 지표 (지점명 클릭 시 상세)</div>
+      <label class="bsm" style="cursor:pointer"><i class="ti ti-upload"></i>리뷰 파일 업로드<input type="file" accept=".xlsx,.csv" style="display:none" onchange="parseReviewFile(event)"></label>
+    </div>
+    <div class="tw ox"><table id="review-tbl"><thead><tr><th>지점명</th><th>NPS</th><th>전체 리뷰</th><th>추천</th><th>비추천</th><th>추천관련없음</th><th>순수고객</th><th>신규</th><th>재방문</th><th>⚠</th></tr></thead><tbody id="review-tbody"></tbody></table></div>
+  </div>
+  <div id="fbp-cs" class="hidden">
+    <div class="mstrip">
+      <div class="mc"><div class="mc-lbl">2024년</div><div class="mc-val txt-b">8</div><div class="mc-sub">건</div></div>
+      <div class="mc"><div class="mc-lbl">2025년</div><div class="mc-val txt-r">58</div><div class="mc-sub">건</div></div>
+      <div class="mc"><div class="mc-lbl">2026년</div><div class="mc-val txt-a">7</div><div class="mc-sub">건</div></div>
+      <div class="mc"><div class="mc-lbl">총계</div><div class="mc-val bold">73</div><div class="mc-sub">24~26년</div></div>
+    </div>
+    <div class="g2" style="margin-bottom:14px">
+      <div><div class="st">CS 유형 분류</div><div id="cs-types"></div></div>
+      <div><div class="st">지점별 인입</div><div id="cs-stores"></div></div>
+    </div>
+    <div class="st">공통 패턴 인사이트</div>
+    <div class="ibox danger" style="margin-bottom:6px"><strong>폐점 사전 고지 부재:</strong> 충주·동탄·가양역 폐점 시 사전 안내 없이 고객이 직접 확인 → 브랜드 신뢰 훼손 핵심 요인</div>
+    <div class="ibox warn" style="margin-bottom:6px"><strong>응대 태도 불만:</strong> 강남본점 직원 표정·말투·환불 거부 태도 → 교육 연계 필요</div>
+    <div class="ibox"><strong>가격·이용권 안내 불명확:</strong> 이용권 기간 제한 사전 미안내, 할부 결제 분쟁 → 상담 프로세스 표준화 필요</div>
+  </div>
+</div>
+
+<div class="pnl" id="pnl-sales">
+  <div style="background:var(--bg2);border:1px solid var(--bd0);border-radius:var(--cr);padding:10px 13px;margin-bottom:14px;font-size:12px;color:var(--t1)">교육 시점 전후 3개월 재등록율·제품 판매 매출 비교 (보조 지표)</div>
+  <div class="g2">
+    <div><div class="st">고객 재등록율</div><label class="bsm" style="cursor:pointer;margin-bottom:8px;display:inline-flex"><i class="ti ti-upload"></i>업로드<input type="file" style="display:none"></label><div class="blank"><i class="ti ti-chart-bar"></i>업로드 후 차트 생성</div></div>
+    <div><div class="st">제품 판매 매출</div><div style="height:30px"></div><div class="blank"><i class="ti ti-chart-line"></i>업로드 후 차트 생성</div></div>
+  </div>
+  <div class="st mt16">매장별 매출 현황</div>
+  <div class="tw"><table id="sales-tbl"></table></div>
+</div>
+
+<div class="pnl" id="pnl-edu">
+  <div style="background:var(--bg2);border:1px solid var(--bd0);border-radius:var(--cr);padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--t1)">월별 시청 인원 수 입력 → 1명 이상 시 완료 처리</div>
+  <div class="sum-strip" id="edu-summary"></div>
+  <div class="edu-wrap">
+    <table class="edu-tbl" id="edu-tbl">
+      <thead><tr><th>매장명</th><th class="mo">1월</th><th class="mo">2월</th><th class="mo">3월</th><th class="mo">4월</th><th class="mo">5월</th><th class="mo">6월</th><th class="mo">7월</th><th class="mo">8월</th><th class="mo">9월</th><th class="mo">10월</th><th class="mo">11월</th><th class="mo">12월</th><th>완료율</th></tr></thead>
+      <tbody id="edu-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="drw-wrap" class="hidden"><div class="drw-ov" onclick="handleDrwBg(event)"><div class="drw"><div class="drw-hdr" id="drw-hdr"></div><div class="drw-body" id="drw-body"></div></div></div></div>
+<div id="modal-wrap" class="hidden"><div class="modal-ov" onclick="handleModalBg(event)"><div class="modal" onclick="e=>e.stopPropagation()"><div class="modal-hdr" id="modal-hdr"></div><div class="modal-body" id="modal-body"></div></div></div></div>
+<div id="cpop" class="cpop hidden"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div id="cpop-title" style="font-size:13px;font-weight:500;color:var(--t0)"></div><button class="xbtn" onclick="closeCPop()"><i class="ti ti-x"></i></button></div><div id="cpop-body"></div></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const ST=[{r:1,n:'제주점',t:'두피관리샵',s:91.4,m:{예약경험:100,첫인상:90,상담전문성:100,관리설계:100,설명설득:100,관리사:80,사후관리:90,매장환경:86.7,로열티:100,상담예약:81}},{r:2,n:'통영점',t:'두피관리샵',s:81.2,m:{예약경험:86.7,첫인상:100,상담전문성:92,관리설계:86.7,설명설득:60,관리사:80,사후관리:90,매장환경:86.7,로열티:80,상담예약:64}},{r:3,n:'잠실점',t:'두피관리샵',s:78.5,m:{예약경험:100,첫인상:90,상담전문성:92,관리설계:86.7,설명설득:60,관리사:80,사후관리:40,매장환경:73.3,로열티:75,상담예약:82}},{r:4,n:'전주효자점',t:'샵인샵',s:77.95,m:{예약경험:60,첫인상:90,상담전문성:76,관리설계:86.7,설명설득:100,관리사:60,사후관리:80,매장환경:86.7,로열티:95,상담예약:77}},{r:5,n:'대구죽전점',t:'두피관리샵',s:77.88,m:{예약경험:86.7,첫인상:90,상담전문성:100,관리설계:100,설명설득:60,관리사:60,사후관리:60,매장환경:86.7,로열티:80,상담예약:67}},{r:6,n:'전주점',t:'두피관리샵',s:71.4,m:{예약경험:60,첫인상:90,상담전문성:56,관리설계:73.3,설명설득:60,관리사:100,사후관리:40,매장환경:86.7,로열티:70,상담예약:76}},{r:7,n:'성신여대점',t:'두피관리샵',s:57.7,m:{예약경험:46.7,첫인상:80,상담전문성:44,관리설계:73.3,설명설득:73.3,관리사:70,사후관리:50,매장환경:60,로열티:70,상담예약:39}},{r:8,n:'다산점',t:'샵인샵',s:53.2,m:{예약경험:20,첫인상:60,상담전문성:84,관리설계:60,설명설득:40,관리사:80,사후관리:70,매장환경:86.7,로열티:60,상담예약:14}},{r:9,n:'서울숲점',t:'두피관리샵',s:51.9,m:{예약경험:20,첫인상:50,상담전문성:72,관리설계:73.3,설명설득:46.7,관리사:70,사후관리:20,매장환경:60,로열티:40,상담예약:56}},{r:10,n:'광명점',t:'두피관리샵',s:42.5,m:{예약경험:60,첫인상:40,상담전문성:28,관리설계:73.3,설명설득:33.3,관리사:30,사후관리:70,매장환경:20,로열티:30,상담예약:45}}];
+const ML=['예약경험','첫인상','상담전문성','관리설계','설명설득','관리사','사후관리','매장환경','로열티','상담예약'];
+const MLF={예약경험:'예약 및 방문 전',첫인상:'첫인상 및 응대',상담전문성:'상담사 전문성',관리설계:'두피관리 설계',설명설득:'설명력·설득력',관리사:'관리사 평가',사후관리:'고객 사후관리',매장환경:'매장환경·위생',로열티:'로열티',상담예약:'상담예약 응대'};
+const QSC=[{n:'잠실점',d:'26.05',C:75.0,Q:80.0,E:64.0,S:77.8,tot:74.0,top:{C:'상품 청결 불량·네임택 미비',Q:'진단 기기 소독 미수행',E:'시술 전 도구 소독 미수행',S:'옥외가격표시 미부착'},fails_C:['상품 청결 불량','제품 진열·네임택 미비'],fails_Q:['진단 기기 소독 미수행','추가 질문 미전개'],fails_E:['과장 표현 사용','말투 규정 미준수','시술 전 소독 미수행','상담 시간 초과','홈케어 안내 누락'],fails_S:['옥외가격표시 미부착'],mid_C:['출입문 손자국','조도 고정','진열대 먼지','카운터 개인물품'],mid_S:['접객 응대 착석','제품 추천 미흡']},{n:'성신여대점',d:'26.05',C:93.8,Q:75.0,E:40.0,S:77.8,tot:72.0,top:{C:'(없음)',Q:'진단 기기 소독 미수행',E:'사후 안내 미수행',S:'가운 미착용'},fails_C:[],fails_Q:['진단 기기 소독 미수행','추가 질문 미전개'],fails_E:['매뉴얼 순서 미준수','상담 흐름 부자연','시술 단계 전 설명 누락','시술 전 소독 미수행','사후 안내 미수행','상담 시간 초과','표준 촬영 누락','프로세스 생략'],fails_S:['가운 미착용','옥외가격표시 미부착'],mid_C:['제품 진열 정돈','카운터 개인물품'],mid_S:[]},{n:'다산점',d:'26.05',C:75.0,Q:65.0,E:48.0,S:50.0,tot:61.0,top:{C:'상품 청결 불량·네임택 없음',Q:'진단 기기 소독 미수행',E:'사후 안내·홈케어 누락',S:'가운 미착용·영업시간 미고지'},fails_C:['상품 청결 불량','네임택 없음'],fails_Q:['진단 기기 소독 미수행','추가 질문 미전개'],fails_E:['고객 상태 전달 누락','다음 예약 미흡','상담 흐름 부자연','시술 단계 전 설명 누락','시술 전 소독 미수행','사후 안내 미수행','상담 시간 초과','맞춤 프로그램 미흡','홈케어 안내 누락'],fails_S:['가운 미착용','영업시간 미고지','옥외가격표시 미부착'],mid_C:['고객 동선 장애물','진열대 먼지','카운터 개인물품','기간 지난 홍보물'],mid_S:['제품 추천 미흡','전화 예약 단순 확인','명찰 누락']}];
+const REVIEWS=[{n:'잠실점',nps:18.2,total:403,promoter:75,detractor:2,passive:325,unique:390,newV:66,revisit:36,warn:1,themes:[{n:'친절',v:220,c:'#28c490'},{n:'전문성',v:298,c:'#4a9ef8'},{n:'효과',v:84,c:'#9a80fa'},{n:'환경',v:83,c:'#f0a020'},{n:'가격',v:20,c:'#e5495a'},{n:'추천',v:92,c:'#28c490'}],kws:[['두피',260],['친절',202],['꼼꼼',142],['상담',141],['시원',134],['탈모',108],['설명',77],['직원(분)',74],['만족',64],['추천',64],['편안',55],['원장님',40],['전문',34],['개운',31],['효과',22]],ch:'예약 리뷰 400건 / 영수증 2건 — 99.5% 네이버 예약 유입.',cu:'신규 66건(16%) vs 재방문 36건(9%).',diag:'전문성 기반 맞춤 상담이 강점인 두피 관리 전문 센터.',str:['친절하고 전문적인 1:1 맞춤 상담 (전문성 298건 최다)','시원하고 꼼꼼한 케어 경험 (꼼꼼 142건·시원 134건)']}];
+['통영점','전주효자점','제주점','대구죽전점','전주점','성신여대점','다산점','서울숲점','광명점'].forEach(n=>REVIEWS.push({n,nps:null,total:null,promoter:null,detractor:null,passive:null,unique:null,newV:null,revisit:null,warn:0,themes:null,kws:null,ch:null,cu:null,diag:null,str:null}));
+const qscMap={잠실점:74.0,성신여대점:72.0,다산점:61.0};
+const MONTHS=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const eduData={};ST.forEach(s=>{eduData[s.n]=new Array(12).fill(0)});
+const gActions=[];
+const sc=v=>v==null?'var(--t2)':v>=75?'var(--grn)':v>=65?'var(--amb)':'var(--red)';
+const hc=v=>v==null?'hd-n':v>=75?'hd-g':v>=65?'hd-a':'hd-r';
+const nd=v=>v==null?'—':v;
+const rk=r=>{const c=r===1?'rk1':r<=3?'rk2':'rk-n';return`<span class="rk ${c}">${r}</span>`};
+function buildChips(){const care=ST.filter(s=>s.s<65||(qscMap[s.n]!==undefined&&qscMap[s.n]<65));document.getElementById('care-cnt').textContent=care.length;document.getElementById('care-bar').style.width=(care.length/ST.length*100)+'%';const el=document.getElementById('home-chips');el.innerHTML='';care.forEach(st=>{const d=document.createElement('div');d.className='achip';const qv=qscMap[st.n];d.innerHTML=`<i class="ti ti-alert-circle"></i>${st.n} <span style="font-size:10px;opacity:.75;margin-left:3px">MS ${st.s}${qv!==undefined?` / QSC ${qv}`:''}</span>`;el.appendChild(d);});}
+function buildHeatmap(){const cols=['예약·방문 안내','상담 품질','시술·위생','사후관리','매장 환경'];const getV=(s,c)=>{if(c==='예약·방문 안내')return s.m.예약경험;if(c==='상담 품질')return Math.round((s.m.상담전문성+s.m.관리설계+s.m.설명설득)/3*10)/10;if(c==='시술·위생')return s.m.관리사;if(c==='사후관리')return s.m.사후관리;return s.m.매장환경;};document.getElementById('hmap-tbl').innerHTML='<thead><tr style="background:var(--bg2)"><th style="padding:6px 9px;text-align:left;font-size:10px;color:var(--t2);border-bottom:1px solid var(--bd0)">매장</th>'+cols.map(c=>`<th style="padding:6px 6px;text-align:center;font-size:10px;color:var(--t2);border-bottom:1px solid var(--bd0)">${c}</th>`).join('')+'</tr></thead><tbody>'+ST.map((s,i)=>`<tr style="${i%2?'background:var(--bg2)':''}"><td style="padding:6px 9px;font-size:12px;font-weight:500;color:var(--t0);white-space:nowrap">${s.n}</td>`+cols.map(c=>`<td style="padding:5px 6px;text-align:center"><span class="hd ${hc(getV(s,c))}" style="display:inline-block"></span></td>`).join('')+'</tr>').join('')+'</tbody>';}
+function addGAct(){const c=document.getElementById('ga-content').value.trim();if(!c)return;const o=document.getElementById('ga-owner').value;const t=document.getElementById('ga-target').value.trim()||'—';gActions.push({c,o,t,done:false});document.getElementById('ga-content').value='';document.getElementById('ga-target').value='';renderGAct();}
+function renderGAct(){const tb=document.getElementById('gact-body');if(!gActions.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t2);font-size:11px;padding:12px">등록된 액션이 없습니다</td></tr>';return;}tb.innerHTML=gActions.map((a,i)=>`<tr><td style="color:var(--t0)">${a.c}</td><td><span class="p ${a.o==='슈퍼바이저'?'p-b':'p-a'}" style="font-size:10px">${a.o}</span></td><td style="font-size:11px;color:var(--t2)">${a.t}</td><td style="text-align:center"><input type="checkbox" ${a.done?'checked':''} style="width:14px;height:14px;cursor:pointer;accent-color:var(--grn)" onchange="gActions[${i}].done=this.checked"></td><td style="text-align:center"><button onclick="gActions.splice(${i},1);renderGAct()" style="background:none;border:none;color:var(--t2);cursor:pointer;font-size:14px">×</button></td></tr>`).join('');}
+function exportActions(){const lines=['=== 닥터포헤어 본사 액션 ('+new Date().toLocaleDateString()+') ==='];gActions.forEach((a,i)=>lines.push(`[${i+1}] ${a.done?'✅':'⬜'} ${a.c} | ${a.o} | ${a.t}`));const txt=lines.join('\n');const el=document.createElement('textarea');el.value=txt;el.style.cssText='position:fixed;opacity:0';document.body.appendChild(el);el.select();try{document.execCommand('copy');alert('클립보드 복사 완료!\n\n'+txt);}catch{alert(txt);}document.body.removeChild(el);}
+let msChart=null;
+function buildMSChart(){const dark=!document.body.hasAttribute('data-lt');const avgs=ML.map(k=>+(ST.reduce((a,s)=>a+s.m[k],0)/ST.length).toFixed(1));const bcs=avgs.map(v=>v>=75?'#28c490':v>=65?'#f0a020':'#e5495a');const tc=dark?'#9ba3c0':'#4a5278';const gc=dark?'#2a2e44':'#d4d8ea';if(msChart)msChart.destroy();const ctx=document.getElementById('msBar').getContext('2d');msChart=new Chart(ctx,{type:'bar',data:{labels:ML.map(k=>k.length>4?k.slice(0,4)+'…':k),datasets:[{data:avgs,backgroundColor:bcs,borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.parsed.y}점`}}},scales:{x:{ticks:{color:tc,font:{size:10},autoSkip:false,maxRotation:28},grid:{color:gc}},y:{min:0,max:100,ticks:{color:tc,font:{size:10},callback:v=>v+'점'},grid:{color:gc}}},onClick:(e,els)=>{if(els.length)showCPop(els[0].index,avgs)}}});}
+function showCPop(idx,avgs){const k=ML[idx],avg=avgs[idx];document.getElementById('cpop-title').textContent=MLF[k]+' — 매장별 순위';const sorted=[...ST].sort((a,b)=>b.m[k]-a.m[k]);document.getElementById('cpop-body').innerHTML=`<div style="font-size:11px;color:var(--t2);margin-bottom:9px">전체 평균 <span style="font-weight:500;color:${sc(avg)}">${avg}점</span></div>`+sorted.map((s,i)=>{const v=s.m[k];return`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px"><span style="font-size:10px;color:var(--t2);width:14px;text-align:right">${i+1}</span><span style="font-size:12px;color:var(--t0);width:74px;flex-shrink:0">${s.n}</span><div style="flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden"><div style="height:100%;width:${v}%;background:${sc(v)};border-radius:3px"></div></div><span style="font-size:11px;font-weight:500;color:${sc(v)};width:30px;text-align:right">${v}</span></div>`;}).join('');document.getElementById('cpop').classList.remove('hidden');}
+function closeCPop(){document.getElementById('cpop').classList.add('hidden')}
+function buildMSTable(){document.getElementById('ms-tbl').innerHTML=`<thead><tr><th>순위</th><th>매장명</th><th>유형</th><th>점수</th><th>상태</th></tr></thead><tbody>`+ST.map((s,i)=>`<tr onclick="openMSDrawer(${i})" style="cursor:pointer"><td>${rk(s.r)}</td><td class="sn">${s.n}</td><td style="color:var(--t2);font-size:11px">${s.t}</td><td class="bold" style="color:${sc(s.s)}">${s.s}</td><td>${s.s>=75?'<span class="p p-g">우수</span>':s.s>=65?'<span class="p p-a">관리 필요</span>':'<span class="p p-r">점검 필요</span>'}</td></tr>`).join('')+'</tbody>';}
+function openMSDrawer(idx){const s=ST[idx];document.getElementById('drw-hdr').innerHTML=`<div style="flex:1"><div style="font-size:15px;font-weight:500;color:var(--t0)">${s.n}</div><div style="font-size:11px;color:var(--t2);margin-top:2px">${s.t} · MS ${s.r}위 · <span style="color:${sc(s.s)};font-weight:500">${s.s}점</span></div></div><button class="xbtn" onclick="closeDrw()"><i class="ti ti-x"></i></button>`;document.getElementById('drw-body').innerHTML=ML.map(k=>{const v=s.m[k];const bc=sc(v);const tag=k==='관리설계'?'<span class="p p-g" style="font-size:9px;padding:1px 5px;margin-left:4px">강점</span>':(k==='사후관리'||k==='상담예약')?'<span class="p p-r" style="font-size:9px;padding:1px 5px;margin-left:4px">개선</span>':'';return`<div class="mbar"><div class="mbar-h"><span class="mbar-lbl">${MLF[k]}${tag}</span><span class="mbar-val" style="color:${bc}">${v}</span></div><div class="mbar-track"><div class="mbar-fill" style="width:${v}%;background:${bc}"></div></div></div>`;}).join('');document.getElementById('drw-wrap').classList.remove('hidden');}
+let qscChart=null;
+function buildQSCTable(){document.getElementById('qsc-tbody').innerHTML=QSC.map((q,i)=>`<tr onclick="openQSCModal(${i})" style="cursor:pointer"><td class="sn">${q.n}</td><td style="color:var(--t2);font-size:11px">${q.d}</td><td style="font-weight:500;color:${sc(q.C)}">${q.C}</td><td style="font-weight:500;color:${sc(q.Q)}">${q.Q}</td><td style="font-weight:500;color:${sc(q.E)}">${q.E}</td><td style="font-weight:500;color:${sc(q.S)}">${q.S}</td><td class="bold" style="color:${sc(q.tot)}">${q.tot}</td><td style="font-size:11px;color:var(--t1)"><div style="margin-bottom:2px"><span class="qsc-dot" style="background:var(--blu)"></span><span style="color:var(--t2)">C:</span> ${q.top.C}</div><div style="margin-bottom:2px"><span class="qsc-dot" style="background:var(--pur)"></span><span style="color:var(--t2)">Q:</span> ${q.top.Q}</div><div style="margin-bottom:2px"><span class="qsc-dot" style="background:var(--amb)"></span><span style="color:var(--t2)">E:</span> ${q.top.E}</div><div><span class="qsc-dot" style="background:var(--grn)"></span><span style="color:var(--t2)">S:</span> ${q.top.S}</div></td></tr>`).join('');}
+function buildQSCChart(){const dark=!document.body.hasAttribute('data-lt');const tc=dark?'#9ba3c0':'#4a5278';const gc=dark?'#2a2e44':'#d4d8ea';if(qscChart)qscChart.destroy();const ctx=document.getElementById('qscBar').getContext('2d');qscChart=new Chart(ctx,{type:'bar',data:{labels:QSC.map(q=>q.n),datasets:[{label:'청결(C)',data:QSC.map(q=>q.C),backgroundColor:'#4a9ef8',borderRadius:3},{label:'교육품질(Q)',data:QSC.map(q=>q.Q),backgroundColor:'#9a80fa',borderRadius:3},{label:'교육이행(E)',data:QSC.map(q=>q.E),backgroundColor:'#f0a020',borderRadius:3},{label:'서비스(S)',data:QSC.map(q=>q.S),backgroundColor:'#28c490',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{color:tc,font:{size:10},boxWidth:10}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{min:0,max:100,ticks:{color:tc,font:{size:10},callback:v=>v+'점'},grid:{color:gc}}}}});}
+function openQSCModal(idx){const q=QSC[idx];document.getElementById('modal-hdr').innerHTML=`<div style="flex:1"><div style="font-size:15px;font-weight:500;color:var(--t0)">${q.n} QSC 상세</div><div style="font-size:11px;color:var(--t2);margin-top:2px">평가일 ${q.d} · 종합 <span style="color:${sc(q.tot)};font-weight:500">${q.tot}점</span></div></div><button class="xbtn" onclick="closeModal()"><i class="ti ti-x"></i></button>`;const cats=[{name:'청결 (C)',score:q.C,fails:q.fails_C,mid:q.mid_C,c:'#4a9ef8'},{name:'교육 품질 (Q)',score:q.Q,fails:q.fails_Q,mid:[],c:'#9a80fa'},{name:'교육 이행 (E)',score:q.E,fails:q.fails_E,mid:[],c:'#f0a020'},{name:'서비스 (S)',score:q.S,fails:q.fails_S,mid:q.mid_S,c:'#28c490'}];document.getElementById('modal-body').innerHTML=cats.map(cat=>`<div style="margin-bottom:13px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:12px;font-weight:500;color:var(--t0)">${cat.name}</span><span style="font-size:14px;font-weight:500;color:${sc(cat.score)}">${cat.score}점</span></div><div class="mbar-track" style="height:6px;margin-bottom:8px"><div class="mbar-fill" style="width:${cat.score}%;background:${cat.c}"></div></div>${cat.fails.length?'<div style="font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">미이행 항목</div>'+cat.fails.map(f=>`<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span class="qsc-dot" style="background:var(--red)"></span><span style="font-size:11px;color:var(--t1)">${f}</span></div>`).join(''):''}${cat.mid&&cat.mid.length?'<div style="font-size:10px;color:var(--amb);text-transform:uppercase;letter-spacing:.04em;margin-top:6px;margin-bottom:4px">보통 항목</div>'+cat.mid.map(f=>`<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span class="qsc-dot" style="background:var(--amb)"></span><span style="font-size:11px;color:var(--t1)">${f}</span></div>`).join(''):''}</div>`).join('<div class="sep"></div>');document.getElementById('modal-wrap').classList.remove('hidden');}
+function buildReviewTable(){document.getElementById('review-tbody').innerHTML=REVIEWS.map((rv,i)=>{const nc=rv.nps==null?'var(--t2)':rv.nps>=30?'var(--grn)':rv.nps>=0?'var(--amb)':'var(--red)';return`<tr onclick="openReviewModal(${i})" style="cursor:pointer"><td class="sn">${rv.n}</td><td class="bold" style="color:${nc}">${nd(rv.nps)}</td><td class="bold">${nd(rv.total)}</td><td style="color:var(--grn)">${nd(rv.promoter)}</td><td style="color:var(--red)">${nd(rv.detractor)}</td><td style="color:var(--t2)">${nd(rv.passive)}</td><td>${nd(rv.unique)}</td><td style="color:var(--grn)">${nd(rv.newV)}</td><td style="color:var(--blu)">${nd(rv.revisit)}</td><td>${rv.warn>0?`<span class="p p-r">⚠${rv.warn}</span>`:'<span class="p p-n">—</span>'}</td></tr>`;}).join('');}
+function parseReviewFile(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=evt=>{try{const wb=XLSX.read(evt.target.result,{type:'array'});const ws=wb.Sheets['📊 대시보드']||wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});const dataRow=rows[7]||[];const total=dataRow[1];const unique=dataRow[2];const newV=dataRow[4];const revisit=dataRow[5];const promoter=rows[11]?rows[11][4]:null;const passive=rows[12]?rows[12][4]:null;const detractor=rows[13]?rows[13][4]:null;const nps=rows[14]?rows[14][4]:null;const themes=[];const themeColors=['#28c490','#4a9ef8','#9a80fa','#f0a020','#e5495a','#28c490'];for(let r=20;r<=25;r++){const row=rows[r]||[];if(row[1]&&row[2]!=null)themes.push({n:String(row[1]),v:Number(row[2]),c:themeColors[r-20]});}const kws=[];for(let r=29;r<=38;r++){const row=rows[r]||[];if(row[2]&&row[3]!=null)kws.push([String(row[2]),Number(row[3])]);if(row[6]&&row[7]!=null)kws.push([String(row[6]),Number(row[7])]);}kws.sort((a,b)=>b[1]-a[1]);const hasWarn=rows.some(row=>row&&row.some(cell=>typeof cell==='string'&&(cell.includes('강매')||cell.includes('경고'))));let tName=null;const fname=file.name;ST.forEach(s=>{if(fname.includes(s.n)||fname.includes(s.n.replace('점','')))tName=s.n;});if(!tName){const r0=String(rows[0]?rows[0].join(''):'');ST.forEach(s=>{if(r0.includes(s.n.replace('점','')))tName=s.n;});}if(!tName)tName='알 수 없음';const obj={n:tName,nps:nps||null,total:total||null,promoter:promoter||null,detractor:detractor||null,passive:passive||null,unique:unique||null,newV:newV||null,revisit:revisit||null,warn:hasWarn?1:0,themes:themes.length?themes:null,kws:kws.length?kws.slice(0,15):null,ch:null,cu:null,diag:null,str:null};const idx=REVIEWS.findIndex(r=>r.n===tName);if(idx>=0)REVIEWS[idx]=obj;else REVIEWS.push(obj);buildReviewTable();alert(`✅ ${tName} 리뷰 데이터 반영 완료\nNPS: ${nps} | 전체: ${total}건`);}catch(err){alert('파싱 오류: '+err.message);}e.target.value='';};reader.readAsArrayBuffer(file);}
+function openReviewModal(idx){const rv=REVIEWS[idx];document.getElementById('modal-hdr').innerHTML=`<div style="flex:1"><div style="font-size:15px;font-weight:500;color:var(--t0)">${rv.n} 리뷰 분석</div><div style="font-size:11px;color:var(--t2);margin-top:2px">${rv.total?`전체 ${rv.total}건 · 순수고객 ${rv.unique}명`:'데이터 미업로드'}</div></div><button class="xbtn" onclick="closeModal()"><i class="ti ti-x"></i></button>`;if(!rv.total){document.getElementById('modal-body').innerHTML=`<div class="blank" style="margin:16px 0"><i class="ti ti-upload"></i>리뷰 파일 업로드 후 결과 표시</div>`;document.getElementById('modal-wrap').classList.remove('hidden');return;}const maxT=rv.themes?Math.max(...rv.themes.map(x=>x.v)):1;const maxK=rv.kws?rv.kws[0][1]:1;document.getElementById('modal-body').innerHTML=`<div class="mtabs"><div class="mtab on" onclick="rmTab('ov',this)">요약</div><div class="mtab" onclick="rmTab('th',this)">테마 키워드</div><div class="mtab" onclick="rmTab('kw',this)">세부 키워드</div><div class="mtab" onclick="rmTab('ins',this)">인사이트</div></div><div id="rmt-ov">${rv.warn>0?`<div class="ibox danger" style="margin-bottom:10px"><strong>⚠ 경고:</strong> 강매·과도권유 의심 리뷰 1건 감지</div>`:''}<div class="g2"><div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">NPS</span><span class="bold txt-b" style="font-size:16px">${rv.nps}</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">추천</span><span style="font-weight:500;color:var(--grn)">${rv.promoter}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">추천관련없음</span><span>${rv.passive}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">비추천</span><span style="font-weight:500;color:var(--red)">${rv.detractor}건</span></div></div><div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">전체 리뷰</span><span class="bold">${rv.total}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">순수 고객</span><span class="bold">${rv.unique}명</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">신규</span><span style="color:var(--grn)">${rv.newV}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">재방문</span><span style="color:var(--blu)">${rv.revisit}건</span></div></div></div></div><div id="rmt-th" class="hidden">${rv.themes?rv.themes.map(t=>`<div class="kwbar"><span class="kwbar-name">${t.n}</span><div class="kwbar-track"><div class="kwbar-fill" style="width:${Math.round(t.v/maxT*100)}%;background:${t.c}"></div></div><span class="kwbar-val">${t.v}</span></div>`).join(''):'없음'}</div><div id="rmt-kw" class="hidden">${rv.kws?rv.kws.map(([k,v],i)=>`<div class="kwbar"><span style="font-size:10px;color:var(--t2);width:18px;text-align:right;flex-shrink:0">${i+1}</span><span class="kwbar-name" style="width:52px">${k}</span><div class="kwbar-track"><div class="kwbar-fill" style="width:${Math.round(v/maxK*100)}%;background:var(--grn)"></div></div><span class="kwbar-val">${v}</span></div>`).join(''):'없음'}</div><div id="rmt-ins" class="hidden">${rv.ch?`<div style="font-size:11px;color:var(--t2);margin-bottom:5px">예약 채널</div><div class="ibox" style="margin-bottom:10px">${rv.ch}</div>`:''}${rv.cu?`<div style="font-size:11px;color:var(--t2);margin-bottom:5px">고객 구성</div><div class="ibox" style="margin-bottom:10px">${rv.cu}</div>`:''}${rv.diag?`<div style="font-size:11px;color:var(--t2);margin-bottom:5px">한줄 종합 진단</div><div class="ibox" style="border-left-color:var(--blu);margin-bottom:10px"><strong>${rv.diag}</strong></div>`:''}${rv.str?rv.str.map((s,i)=>`<div class="ibox" style="margin-bottom:5px"><strong>${i+1}.</strong> ${s}</div>`).join(''):''}</div>`;document.getElementById('modal-wrap').classList.remove('hidden');}
+function rmTab(id,el){['ov','th','kw','ins'].forEach(k=>document.getElementById('rmt-'+k)?.classList.add('hidden'));document.querySelectorAll('#modal-body .mtab').forEach(t=>t.classList.remove('on'));document.getElementById('rmt-'+id)?.classList.remove('hidden');el.classList.add('on');}
+function buildCSCharts(){const types=[{n:'매장폐점/환불',cnt:53,c:'var(--red)'},{n:'서비스 불만',cnt:8,c:'var(--amb)'},{n:'이용권/예약운영',cnt:4,c:'var(--blu)'},{n:'제품 관련',cnt:4,c:'var(--pur)'},{n:'기타',cnt:4,c:'var(--t2)'}];document.getElementById('cs-types').innerHTML=types.map(t=>`<div class="cs-row"><span class="cs-name">${t.n}</span><div class="cs-track"><div class="cs-fill" style="width:${Math.round(t.cnt/53*100)}%;background:${t.c}"></div></div><span class="cs-cnt bold" style="color:${t.c}">${t.cnt}</span></div>`).join('');const stores=[{n:'충주점',cnt:46,c:'var(--red)'},{n:'송도점/센트럴',cnt:7,c:'var(--amb)'},{n:'강남본점',cnt:6,c:'var(--amb)'},{n:'전주점',cnt:2,c:'var(--t1)'},{n:'서울숲·성신여대',cnt:2,c:'var(--t1)'},{n:'기타',cnt:10,c:'var(--t2)'}];document.getElementById('cs-stores').innerHTML=stores.map(s=>`<div class="cs-row"><span class="cs-name">${s.n}</span><div class="cs-track"><div class="cs-fill" style="width:${Math.round(s.cnt/46*100)}%;background:${s.c}"></div></div><span class="cs-cnt bold" style="color:${s.c}">${s.cnt}</span></div>`).join('');}
+function buildSalesTable(){document.getElementById('sales-tbl').innerHTML=`<thead><tr><th>매장명</th><th>재등록률 전</th><th>재등록률 후</th><th>제품 매출 전</th><th>제품 매출 후</th><th>변화</th></tr></thead><tbody>`+ST.map(s=>`<tr><td class="sn">${s.n}</td><td style="color:var(--t2)">—</td><td style="color:var(--t2)">—</td><td style="color:var(--t2)">—</td><td style="color:var(--t2)">—</td><td><span class="p p-n">미입력</span></td></tr>`).join('')+'</tbody>';}
+function buildEduTable(){const tbody=document.getElementById('edu-tbody');tbody.innerHTML=ST.map(s=>{const d=eduData[s.n];const done=d.filter(v=>v>0).length;const k=s.n.replace(/\s/g,'_');const pillCls=done===12?'p-g':done>=6?'p-a':done>0?'p-n':'p-r';return`<tr><td><div style="font-size:12px;font-weight:500;color:var(--t0)">${s.n}</div><div style="font-size:10px;color:var(--t2)">${s.t}</div></td>`+d.map((v,i)=>`<td><div class="edu-cell"><input class="edu-num" type="number" min="0" max="99" id="en_${k}_${i}" value="${v>0?v:''}" placeholder="0" oninput="updateEdu('${s.n}',${i},this)"><div class="ems ${v>0?'y':''}" id="em_${k}_${i}"></div></div></td>`).join('')+`<td><span class="p ${pillCls}" id="ep_${k}">${done}/12</span></td></tr>`;}).join('');updateEduSummary();}
+function updateEdu(name,idx,input){const v=input.value===''?0:Math.max(0,Math.min(99,parseInt(input.value)||0));eduData[name][idx]=v;const k=name.replace(/\s/g,'_');const em=document.getElementById(`em_${k}_${idx}`);if(em){em.className='ems'+(v>0?' y':'');}const done=eduData[name].filter(x=>x>0).length;const ep=document.getElementById(`ep_${k}`);if(ep){ep.className='p '+(done===12?'p-g':done>=6?'p-a':done>0?'p-n':'p-r');ep.textContent=`${done}/12`;}updateEduSummary();}
+function updateEduSummary(){const total=ST.reduce((s,st)=>s+eduData[st.n].filter(v=>v>0).length,0);const full=ST.filter(st=>eduData[st.n].filter(v=>v>0).length===12).length;const zero=ST.filter(st=>eduData[st.n].every(v=>v===0)).length;document.getElementById('edu-summary').innerHTML=`<div class="sum-chip"><div><div class="sum-val" style="color:var(--grn)">${total}</div><div class="sum-lbl">완료 (매장×월)</div></div><span style="color:var(--t2);font-size:12px">/ ${ST.length*12}</span></div><div class="sum-chip"><div><div class="sum-val" style="color:var(--amb)">${full}</div><div class="sum-lbl">전월 완료 매장</div></div></div><div class="sum-chip"><div><div class="sum-val" style="color:var(--red)">${zero}</div><div class="sum-lbl">미입력 매장</div></div></div>`;}
+function closeDrw(){document.getElementById('drw-wrap').classList.add('hidden')}
+function handleDrwBg(e){if(e.target===e.currentTarget)closeDrw()}
+function closeModal(){document.getElementById('modal-wrap').classList.add('hidden')}
+function handleModalBg(e){if(e.target.classList.contains('modal-ov'))closeModal()}
+function fbTab(id,el){document.querySelectorAll('#pnl-feedback .mtab').forEach(t=>t.classList.remove('on'));['rv','cs'].forEach(k=>document.getElementById('fbp-'+k)?.classList.add('hidden'));el.classList.add('on');document.getElementById('fbp-'+id).classList.remove('hidden');}
+let isDark=true;
+function toggleTheme(){isDark=!isDark;document.body[isDark?'removeAttribute':'setAttribute']('data-lt',isDark?'':'');document.getElementById('tbtn').innerHTML=(isDark?'<i class="ti ti-sun"></i>':'<i class="ti ti-moon"></i>')+'<span id="ttxt">'+(isDark?'라이트':'다크')+'</span>';if(document.getElementById('msBar').offsetParent)buildMSChart();if(document.getElementById('qscBar').offsetParent)buildQSCChart();}
+function goTab(id,el){document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));el.classList.add('on');document.getElementById('pnl-'+id).classList.add('on');closeDrw();closeModal();closeCPop();if(id==='ms')setTimeout(buildMSChart,80);if(id==='direct')setTimeout(()=>{buildQSCTable();buildQSCChart();},80);if(id==='feedback')setTimeout(()=>{buildReviewTable();buildCSCharts();},80);}
+buildChips();buildHeatmap();buildMSTable();buildSalesTable();buildEduTable();
+setTimeout(buildMSChart,200);
+</script>
+</body>
+</html>
