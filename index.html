@@ -349,7 +349,151 @@ function buildQSCTable(){document.getElementById('qsc-tbody').innerHTML=QSC.map(
 function buildQSCChart(){const dark=!document.body.hasAttribute('data-lt');const tc=dark?'#9ba3c0':'#4a5278';const gc=dark?'#2a2e44':'#d4d8ea';if(qscChart)qscChart.destroy();const ctx=document.getElementById('qscBar').getContext('2d');qscChart=new Chart(ctx,{type:'bar',data:{labels:QSC.map(q=>q.n),datasets:[{label:'청결(C)',data:QSC.map(q=>q.C),backgroundColor:'#4a9ef8',borderRadius:3},{label:'교육품질(Q)',data:QSC.map(q=>q.Q),backgroundColor:'#9a80fa',borderRadius:3},{label:'교육이행(E)',data:QSC.map(q=>q.E),backgroundColor:'#f0a020',borderRadius:3},{label:'서비스(S)',data:QSC.map(q=>q.S),backgroundColor:'#28c490',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{color:tc,font:{size:10},boxWidth:10}}},scales:{x:{ticks:{color:tc,font:{size:11}},grid:{color:gc}},y:{min:0,max:100,ticks:{color:tc,font:{size:10},callback:v=>v+'점'},grid:{color:gc}}}}});}
 function openQSCModal(idx){const q=QSC[idx];document.getElementById('modal-hdr').innerHTML=`<div style="flex:1"><div style="font-size:15px;font-weight:500;color:var(--t0)">${q.n} QSC 상세</div><div style="font-size:11px;color:var(--t2);margin-top:2px">평가일 ${q.d} · 종합 <span style="color:${sc(q.tot)};font-weight:500">${q.tot}점</span></div></div><button class="xbtn" onclick="closeModal()"><i class="ti ti-x"></i></button>`;const cats=[{name:'청결 (C)',score:q.C,fails:q.fails_C,mid:q.mid_C,c:'#4a9ef8'},{name:'교육 품질 (Q)',score:q.Q,fails:q.fails_Q,mid:[],c:'#9a80fa'},{name:'교육 이행 (E)',score:q.E,fails:q.fails_E,mid:[],c:'#f0a020'},{name:'서비스 (S)',score:q.S,fails:q.fails_S,mid:q.mid_S,c:'#28c490'}];document.getElementById('modal-body').innerHTML=cats.map(cat=>`<div style="margin-bottom:13px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:12px;font-weight:500;color:var(--t0)">${cat.name}</span><span style="font-size:14px;font-weight:500;color:${sc(cat.score)}">${cat.score}점</span></div><div class="mbar-track" style="height:6px;margin-bottom:8px"><div class="mbar-fill" style="width:${cat.score}%;background:${cat.c}"></div></div>${cat.fails.length?'<div style="font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">미이행 항목</div>'+cat.fails.map(f=>`<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span class="qsc-dot" style="background:var(--red)"></span><span style="font-size:11px;color:var(--t1)">${f}</span></div>`).join(''):''}${cat.mid&&cat.mid.length?'<div style="font-size:10px;color:var(--amb);text-transform:uppercase;letter-spacing:.04em;margin-top:6px;margin-bottom:4px">보통 항목</div>'+cat.mid.map(f=>`<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><span class="qsc-dot" style="background:var(--amb)"></span><span style="font-size:11px;color:var(--t1)">${f}</span></div>`).join(''):''}</div>`).join('<div class="sep"></div>');document.getElementById('modal-wrap').classList.remove('hidden');}
 function buildReviewTable(){document.getElementById('review-tbody').innerHTML=REVIEWS.map((rv,i)=>{const nc=rv.nps==null?'var(--t2)':rv.nps>=30?'var(--grn)':rv.nps>=0?'var(--amb)':'var(--red)';return`<tr onclick="openReviewModal(${i})" style="cursor:pointer"><td class="sn">${rv.n}</td><td class="bold" style="color:${nc}">${nd(rv.nps)}</td><td class="bold">${nd(rv.total)}</td><td style="color:var(--grn)">${nd(rv.promoter)}</td><td style="color:var(--red)">${nd(rv.detractor)}</td><td style="color:var(--t2)">${nd(rv.passive)}</td><td>${nd(rv.unique)}</td><td style="color:var(--grn)">${nd(rv.newV)}</td><td style="color:var(--blu)">${nd(rv.revisit)}</td><td>${rv.warn>0?`<span class="p p-r">⚠${rv.warn}</span>`:'<span class="p p-n">—</span>'}</td></tr>`;}).join('');}
-function parseReviewFile(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=evt=>{try{const wb=XLSX.read(evt.target.result,{type:'array'});const ws=wb.Sheets['📊 대시보드']||wb.Sheets[wb.SheetNames[0]];const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});const dataRow=rows[7]||[];const total=dataRow[1];const unique=dataRow[2];const newV=dataRow[4];const revisit=dataRow[5];const promoter=rows[11]?rows[11][4]:null;const passive=rows[12]?rows[12][4]:null;const detractor=rows[13]?rows[13][4]:null;const nps=rows[14]?rows[14][4]:null;const themes=[];const themeColors=['#28c490','#4a9ef8','#9a80fa','#f0a020','#e5495a','#28c490'];for(let r=20;r<=25;r++){const row=rows[r]||[];if(row[1]&&row[2]!=null)themes.push({n:String(row[1]),v:Number(row[2]),c:themeColors[r-20]});}const kws=[];for(let r=29;r<=38;r++){const row=rows[r]||[];if(row[2]&&row[3]!=null)kws.push([String(row[2]),Number(row[3])]);if(row[6]&&row[7]!=null)kws.push([String(row[6]),Number(row[7])]);}kws.sort((a,b)=>b[1]-a[1]);const hasWarn=rows.some(row=>row&&row.some(cell=>typeof cell==='string'&&(cell.includes('강매')||cell.includes('경고'))));let tName=null;const fname=file.name;ST.forEach(s=>{if(fname.includes(s.n)||fname.includes(s.n.replace('점','')))tName=s.n;});if(!tName){const r0=String(rows[0]?rows[0].join(''):'');ST.forEach(s=>{if(r0.includes(s.n.replace('점','')))tName=s.n;});}if(!tName)tName='알 수 없음';const obj={n:tName,nps:nps||null,total:total||null,promoter:promoter||null,detractor:detractor||null,passive:passive||null,unique:unique||null,newV:newV||null,revisit:revisit||null,warn:hasWarn?1:0,themes:themes.length?themes:null,kws:kws.length?kws.slice(0,15):null,ch:null,cu:null,diag:null,str:null};const idx=REVIEWS.findIndex(r=>r.n===tName);if(idx>=0)REVIEWS[idx]=obj;else REVIEWS.push(obj);buildReviewTable();alert(`✅ ${tName} 리뷰 데이터 반영 완료\nNPS: ${nps} | 전체: ${total}건`);}catch(err){alert('파싱 오류: '+err.message);}e.target.value='';};reader.readAsArrayBuffer(file);}
+function parseReviewFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=evt=>{
+    try{
+      const wb=XLSX.read(evt.target.result,{type:'array'});
+      const ws=wb.Sheets['📊 대시보드']||wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+
+      // ── 범용 파서: 키 레이블로 위치 탐색 ──
+      let total=null,unique=null,newV=null,revisit=null;
+      let promoter=null,passive=null,detractor=null,nps=null;
+
+      // 고객건전성 행 찾기: "전체 리뷰 수" 라벨 탐색
+      for(let i=0;i<rows.length;i++){
+        const r=rows[i]||[];
+        // 헤더행: "전체 리뷰 수" 포함 확인
+        const hasHeader=r.some(c=>typeof c==='string'&&c.includes('전체 리뷰'));
+        if(hasHeader){
+          // 다음 행이 데이터행
+          const dr=rows[i+1]||[];
+          // col1~8 중 숫자값 찾기 (헤더 컬럼 순서 매칭)
+          for(let ci=0;ci<r.length;ci++){
+            const h=r[ci];if(!h)continue;
+            const hStr=String(h);
+            if(hStr.includes('전체 리뷰'))total=dr[ci];
+            else if(hStr.includes('순수 고객'))unique=dr[ci];
+            else if(hStr.includes('신규'))newV=dr[ci];
+            else if(hStr.includes('재방문')&&!hStr.includes('비중'))revisit=dr[ci];
+          }
+          break;
+        }
+      }
+
+      // NPS 그룹 찾기: "추천 (Promoter)" 라벨 탐색
+      for(let i=0;i<rows.length;i++){
+        const r=rows[i]||[];
+        for(let ci=0;ci<r.length;ci++){
+          const c=r[ci];if(typeof c!=='string')continue;
+          if(c.includes('추천')&&c.includes('Promoter')){
+            // 같은 행 또는 다음 숫자 컬럼에서 값 탐색
+            for(let cc=ci+1;cc<r.length;cc++){if(typeof r[cc]==='number'){promoter=r[cc];break;}}
+          }
+          if(c.includes('추천관련없음')||c.includes('Passive')){
+            for(let cc=ci+1;cc<r.length;cc++){if(typeof r[cc]==='number'){passive=r[cc];break;}}
+          }
+          if(c.includes('비추천')||c.includes('Detractor')){
+            for(let cc=ci+1;cc<r.length;cc++){if(typeof r[cc]==='number'){detractor=r[cc];break;}}
+          }
+          if(c.includes('NPS 지수')||c.includes('NPS\n')){
+            // NPS 값: 같은 행에서 숫자 탐색, 없으면 다음 행
+            let found=false;
+            for(let cc=ci+1;cc<r.length;cc++){if(typeof r[cc]==='number'&&r[cc]>-101&&r[cc]<101){nps=r[cc];found=true;break;}}
+            if(!found&&rows[i+1]){
+              const nr=rows[i+1];
+              for(let cc=0;cc<nr.length;cc++){if(typeof nr[cc]==='number'&&nr[cc]>-101&&nr[cc]<101){nps=nr[cc];break;}}
+            }
+          }
+        }
+      }
+      // NPS를 셀 텍스트에서 직접 추출 (예: "NPS\n13.9")
+      if(nps===null){
+        for(let i=0;i<rows.length;i++){
+          const r=rows[i]||[];
+          for(let ci=0;ci<r.length;ci++){
+            const c=r[ci];
+            if(typeof c==='string'){
+              const m=c.match(/NPS[\s\n]+([\-\d.]+)/);
+              if(m){nps=parseFloat(m[1]);break;}
+            }
+          }
+          if(nps!==null)break;
+        }
+      }
+
+      // 6대 테마 찾기: "분석 테마" 헤더 탐색
+      const themes=[];
+      const themeColors=['#28c490','#4a9ef8','#9a80fa','#f0a020','#e5495a','#28c490'];
+      const themeNames=['친절','전문성','효과','환경','가격','추천'];
+      for(let i=0;i<rows.length;i++){
+        const r=rows[i]||[];
+        if(r.some(c=>typeof c==='string'&&c.includes('분석 테마'))){
+          // 다음 6행이 테마 데이터
+          for(let ti=i+1;ti<=i+6&&ti<rows.length;ti++){
+            const tr=rows[ti]||[];
+            // 첫 번째 문자열 = 테마명, 첫 번째 숫자 = 언급수
+            let tname=null,tval=null;
+            for(let ci=0;ci<tr.length;ci++){
+              if(typeof tr[ci]==='string'&&themeNames.includes(tr[ci])&&!tname)tname=tr[ci];
+              if(typeof tr[ci]==='number'&&tval===null&&tr[ci]>0)tval=tr[ci];
+            }
+            if(tname&&tval!=null)themes.push({n:tname,v:tval,c:themeColors[themes.length]});
+          }
+          break;
+        }
+      }
+
+      // 세부 키워드 찾기: "순위" + "키워드" 헤더 탐색
+      const kws=[];
+      for(let i=0;i<rows.length;i++){
+        const r=rows[i]||[];
+        const hasKwHeader=r.filter(c=>typeof c==='string'&&c.includes('키워드')).length>=2;
+        if(hasKwHeader){
+          // 헤더 다음 행부터 키워드 수집
+          for(let ki=i+1;ki<rows.length&&kws.length<20;ki++){
+            const kr=rows[ki]||[];
+            // 숫자+문자 패턴으로 키워드-값 쌍 찾기
+            for(let ci=0;ci<kr.length-1;ci++){
+              const isRank=typeof kr[ci]==='number'&&kr[ci]>=1&&kr[ci]<=30;
+              const isName=typeof kr[ci+1]==='string'&&kr[ci+1].length>0&&kr[ci+1].length<10;
+              const isVal=typeof kr[ci+2]==='number'&&kr[ci+2]>0;
+              if(isRank&&isName&&isVal){
+                if(!kws.find(k=>k[0]===kr[ci+1]))kws.push([kr[ci+1],kr[ci+2]]);
+              }
+            }
+            // 빈 행이면 종료
+            if(kr.every(c=>c===null||c===undefined))break;
+          }
+          break;
+        }
+      }
+      kws.sort((a,b)=>b[1]-a[1]);
+
+      const hasWarn=rows.some(row=>row&&row.some(cell=>typeof cell==='string'&&(cell.includes('강매')||cell.includes('경고'))));
+
+      // 매장명 파악
+      let tName=null;
+      const fname=file.name;
+      ST.forEach(s=>{if(fname.includes(s.n)||fname.includes(s.n.replace('점','')))tName=s.n;});
+      if(!tName){
+        const r0=String((rows[0]||[]).join('')+(rows[1]||[]).join(''));
+        ST.forEach(s=>{if(r0.includes(s.n.replace('점','')))tName=s.n;});
+      }
+      if(!tName)tName='알 수 없음';
+
+      const obj={n:tName,nps:nps,total:total,promoter:promoter,detractor:detractor,passive:passive,unique:unique,newV:newV,revisit:revisit,warn:hasWarn?1:0,themes:themes.length?themes:null,kws:kws.length?kws.slice(0,15):null,ch:null,cu:null,diag:null,str:null};
+      const idx=REVIEWS.findIndex(r=>r.n===tName);
+      if(idx>=0)REVIEWS[idx]=obj;else REVIEWS.push(obj);
+      buildReviewTable();
+      alert('✅ '+tName+' 리뷰 데이터 반영 완료\nNPS: '+nps+' | 전체: '+total+'건 | 추천: '+promoter+'건');
+    }catch(err){alert('파싱 오류: '+err.message+' ('+err.stack+')');}
+    e.target.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
 function openReviewModal(idx){const rv=REVIEWS[idx];document.getElementById('modal-hdr').innerHTML=`<div style="flex:1"><div style="font-size:15px;font-weight:500;color:var(--t0)">${rv.n} 리뷰 분석</div><div style="font-size:11px;color:var(--t2);margin-top:2px">${rv.total?`전체 ${rv.total}건 · 순수고객 ${rv.unique}명`:'데이터 미업로드'}</div></div><button class="xbtn" onclick="closeModal()"><i class="ti ti-x"></i></button>`;if(!rv.total){document.getElementById('modal-body').innerHTML=`<div class="blank" style="margin:16px 0"><i class="ti ti-upload"></i>리뷰 파일 업로드 후 결과 표시</div>`;document.getElementById('modal-wrap').classList.remove('hidden');return;}const maxT=rv.themes?Math.max(...rv.themes.map(x=>x.v)):1;const maxK=rv.kws?rv.kws[0][1]:1;document.getElementById('modal-body').innerHTML=`<div class="mtabs"><div class="mtab on" onclick="rmTab('ov',this)">요약</div><div class="mtab" onclick="rmTab('th',this)">테마 키워드</div><div class="mtab" onclick="rmTab('kw',this)">세부 키워드</div><div class="mtab" onclick="rmTab('ins',this)">인사이트</div></div><div id="rmt-ov">${rv.warn>0?`<div class="ibox danger" style="margin-bottom:10px"><strong>⚠ 경고:</strong> 강매·과도권유 의심 리뷰 1건 감지</div>`:''}<div class="g2"><div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">NPS</span><span class="bold txt-b" style="font-size:16px">${rv.nps}</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">추천</span><span style="font-weight:500;color:var(--grn)">${rv.promoter}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">추천관련없음</span><span>${rv.passive}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">비추천</span><span style="font-weight:500;color:var(--red)">${rv.detractor}건</span></div></div><div style="display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">전체 리뷰</span><span class="bold">${rv.total}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">순수 고객</span><span class="bold">${rv.unique}명</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">신규</span><span style="color:var(--grn)">${rv.newV}건</span></div><div style="display:flex;justify-content:space-between"><span style="font-size:11px;color:var(--t2)">재방문</span><span style="color:var(--blu)">${rv.revisit}건</span></div></div></div></div><div id="rmt-th" class="hidden">${rv.themes?rv.themes.map(t=>`<div class="kwbar"><span class="kwbar-name">${t.n}</span><div class="kwbar-track"><div class="kwbar-fill" style="width:${Math.round(t.v/maxT*100)}%;background:${t.c}"></div></div><span class="kwbar-val">${t.v}</span></div>`).join(''):'없음'}</div><div id="rmt-kw" class="hidden">${rv.kws?rv.kws.map(([k,v],i)=>`<div class="kwbar"><span style="font-size:10px;color:var(--t2);width:18px;text-align:right;flex-shrink:0">${i+1}</span><span class="kwbar-name" style="width:52px">${k}</span><div class="kwbar-track"><div class="kwbar-fill" style="width:${Math.round(v/maxK*100)}%;background:var(--grn)"></div></div><span class="kwbar-val">${v}</span></div>`).join(''):'없음'}</div><div id="rmt-ins" class="hidden">${rv.ch?`<div style="font-size:11px;color:var(--t2);margin-bottom:5px">예약 채널</div><div class="ibox" style="margin-bottom:10px">${rv.ch}</div>`:''}${rv.cu?`<div style="font-size:11px;color:var(--t2);margin-bottom:5px">고객 구성</div><div class="ibox" style="margin-bottom:10px">${rv.cu}</div>`:''}${rv.diag?`<div style="font-size:11px;color:var(--t2);margin-bottom:5px">한줄 종합 진단</div><div class="ibox" style="border-left-color:var(--blu);margin-bottom:10px"><strong>${rv.diag}</strong></div>`:''}${rv.str?rv.str.map((s,i)=>`<div class="ibox" style="margin-bottom:5px"><strong>${i+1}.</strong> ${s}</div>`).join(''):''}</div>`;document.getElementById('modal-wrap').classList.remove('hidden');}
 function rmTab(id,el){['ov','th','kw','ins'].forEach(k=>document.getElementById('rmt-'+k)?.classList.add('hidden'));document.querySelectorAll('#modal-body .mtab').forEach(t=>t.classList.remove('on'));document.getElementById('rmt-'+id)?.classList.remove('hidden');el.classList.add('on');}
 function buildCSCharts(){const types=[{n:'매장폐점/환불',cnt:53,c:'var(--red)'},{n:'서비스 불만',cnt:8,c:'var(--amb)'},{n:'이용권/예약운영',cnt:4,c:'var(--blu)'},{n:'제품 관련',cnt:4,c:'var(--pur)'},{n:'기타',cnt:4,c:'var(--t2)'}];document.getElementById('cs-types').innerHTML=types.map(t=>`<div class="cs-row"><span class="cs-name">${t.n}</span><div class="cs-track"><div class="cs-fill" style="width:${Math.round(t.cnt/53*100)}%;background:${t.c}"></div></div><span class="cs-cnt bold" style="color:${t.c}">${t.cnt}</span></div>`).join('');const stores=[{n:'충주점',cnt:46,c:'var(--red)'},{n:'송도점/센트럴',cnt:7,c:'var(--amb)'},{n:'강남본점',cnt:6,c:'var(--amb)'},{n:'전주점',cnt:2,c:'var(--t1)'},{n:'서울숲·성신여대',cnt:2,c:'var(--t1)'},{n:'기타',cnt:10,c:'var(--t2)'}];document.getElementById('cs-stores').innerHTML=stores.map(s=>`<div class="cs-row"><span class="cs-name">${s.n}</span><div class="cs-track"><div class="cs-fill" style="width:${Math.round(s.cnt/46*100)}%;background:${s.c}"></div></div><span class="cs-cnt bold" style="color:${s.c}">${s.cnt}</span></div>`).join('');}
