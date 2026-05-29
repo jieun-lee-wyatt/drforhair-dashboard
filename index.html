@@ -693,13 +693,23 @@ function parseReviewFile(e){
         }
       }
 
-      // 경고 — 🚨 비추천 관리 시트 Row6 Col4(⚠ 과도권유·강매 건수) 로 판별
+      // 경고 — 🚨 비추천 관리 시트 Row6 Col5(⚠ 과도권유·강매 건수) 로 판별
       var hasWarn=false;
-      var warnSheet=wb.Sheets['\uD83D\uDEA8 비추천 관리'];
-      if(warnSheet){
-        var wrows=XLSX.utils.sheet_to_json(warnSheet,{header:1,defval:null});
-        // Row5(idx4)=헤더, Row6(idx5)=값, Col4(idx4)=과도권유·강매 건수
-        if(wrows[5]&&typeof wrows[5][4]==='number'&&wrows[5][4]>0)hasWarn=true;
+      var warnSheetName='';
+      wb.SheetNames.forEach(function(sn){ if(sn.indexOf('비추천 관리')>=0)warnSheetName=sn; });
+      if(warnSheetName){
+        var warnWs=wb.Sheets[warnSheetName];
+        var wrows=XLSX.utils.sheet_to_json(warnWs,{header:1,defval:null});
+        // Row5(idx4)=헤더, Row6(idx5)=값, 헤더에서 과도권유 컬럼 위치 찾기
+        var hdrRow=wrows[4]||[];
+        var warnCol=-1;
+        for(var wc=0;wc<hdrRow.length;wc++){
+          if(typeof hdrRow[wc]==='string'&&hdrRow[wc].indexOf('과도권유')>=0){warnCol=wc;break;}
+        }
+        if(warnCol>=0&&wrows[5]){
+          var warnVal=wrows[5][warnCol];
+          if(typeof warnVal==='number'&&warnVal>0)hasWarn=true;
+        }
       }
 
       // 매장명
