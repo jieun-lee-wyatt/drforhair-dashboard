@@ -693,14 +693,13 @@ function parseReviewFile(e){
         }
       }
 
-      // 경고
+      // 경고 — 🚨 비추천 관리 시트 Row6 Col4(⚠ 과도권유·강매 건수) 로 판별
       var hasWarn=false;
-      for(var i8=0;i8<rows.length;i8++){
-        var r8=rows[i8]||[];
-        for(var ci13=0;ci13<r8.length;ci13++){
-          if(typeof r8[ci13]==='string'&&(r8[ci13].indexOf('강매')>=0||r8[ci13].indexOf('과도권유')>=0)){hasWarn=true;break;}
-        }
-        if(hasWarn)break;
+      var warnSheet=wb.Sheets['\uD83D\uDEA8 비추천 관리'];
+      if(warnSheet){
+        var wrows=XLSX.utils.sheet_to_json(warnSheet,{header:1,defval:null});
+        // Row5(idx4)=헤더, Row6(idx5)=값, Col4(idx4)=과도권유·강매 건수
+        if(wrows[5]&&typeof wrows[5][4]==='number'&&wrows[5][4]>0)hasWarn=true;
       }
 
       // 매장명
